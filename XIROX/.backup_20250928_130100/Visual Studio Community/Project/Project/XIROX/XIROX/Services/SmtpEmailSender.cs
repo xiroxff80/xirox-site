@@ -18,20 +18,19 @@ namespace XIROX.Services
 
         public async Task SendAsync(string subject, string body, string? fromName, string? fromEmail, CancellationToken ct = default)
         {
-            var host      = _cfg["Smtp:Host"] ?? "smtp.gmail.com";
-            var port      = int.TryParse(_cfg["Smtp:Port"], out var p) ? p : 587;
-            var startTls  = bool.TryParse(_cfg["Smtp:UseStartTls"], out var s) ? s : true;
-            var username  = _cfg["Smtp:Username"];
-            var password  = _cfg["Smtp:Password"];
-            var fromAddr  = _cfg["Smtp:FromEmail"] ?? username ?? "";
-            var toAddr    = _cfg["Smtp:ToEmail"]   ?? username ?? "";
-            var timeoutMs = int.TryParse(_cfg["Smtp:TimeoutMs"], out var t) ? t : 8000;
+            var host     = _cfg["Smtp:Host"] ?? "smtp.gmail.com";
+            var port     = int.TryParse(_cfg["Smtp:Port"], out var p) ? p : 587;
+            var startTls = bool.TryParse(_cfg["Smtp:UseStartTls"], out var s) ? s : true;
+            var username = _cfg["Smtp:Username"];
+            var password = _cfg["Smtp:Password"];
+            var fromAddr = _cfg["Smtp:FromEmail"] ?? username ?? "";
+            var toAddr   = _cfg["Smtp:ToEmail"]   ?? username ?? "";
 
             using var client = new SmtpClient(host, port)
             {
                 EnableSsl  = startTls,
                 Credentials = string.IsNullOrWhiteSpace(username) ? null : new NetworkCredential(username, password),
-                Timeout    = timeoutMs
+                Timeout    = 20000
             };
 
             using var mail = new MailMessage();
@@ -45,7 +44,7 @@ namespace XIROX.Services
 
             try
             {
-                await client.SendMailAsync(mail, ct);
+                await client.SendMailAsync(mail);
             }
             catch (Exception ex)
             {

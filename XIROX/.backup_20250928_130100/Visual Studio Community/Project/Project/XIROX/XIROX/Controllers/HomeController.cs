@@ -29,7 +29,7 @@ namespace XIROX.Controllers
                 TikTokUrl    = _cfg["Links:TikTok"]    ?? "#",
                 InstagramUrl = _cfg["Links:Instagram"] ?? "#",
                 YouTubeUrl   = _cfg["Links:YouTube"]   ?? "#",
-                DiscordUrl   = _cfg["Links:Discord"]   ?? "#"
+                DiscordUrl   = _cfg["Links:Discord"]   ?? "https://discord.gg/xiroxff"
             };
             return View(vm);
         }
@@ -59,13 +59,13 @@ Email: {model.Email}
             {
                 await _email.SendAsync(subject, body, model.Name, model.Email,
                     HttpContext?.RequestAborted ?? default);
-                TempData["Success"] = "Your message was sent successfully.";
+                TempData["Success"] = "پیام شما با موفقیت ارسال شد.";
                 return RedirectToAction(nameof(Contact));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Send contact failed");
-                TempData["Error"] = "Failed to send email. Please try again later.";
+                TempData["Error"] = "ارسال ایمیل انجام نشد. لطفاً بعداً دوباره تلاش کنید.";
                 return RedirectToAction(nameof(Contact));
             }
         }
