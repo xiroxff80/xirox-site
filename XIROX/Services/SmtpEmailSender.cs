@@ -16,39 +16,32 @@ namespace XIROX.Services
             _logger = logger;
         }
 
-        public async Task SendContactAsync(string name, string fromEmail, string message)
+        // امضای اینترفیس: Task SendAsync(string subject, string body, string? fromName, string? fromEmail, CancellationToken ct)
+        public async Task SendAsync(string subject, string body, string? fromName, string? fromEmail, CancellationToken ct)
         {
-            var host      = _cfg["Smtp:Host"] ?? "smtp.gmail.com";
-            var portStr   = _cfg["Smtp:Port"];
-            var useStart  = _cfg["Smtp:UseStartTls"];
-            var username  = _cfg["Smtp:Username"];
-            var password  = _cfg["Smtp:Password"];
-            var fromAddr  = _cfg["Smtp:FromEmail"] ?? username;
-            var toAddr    = _cfg["Smtp:ToEmail"]   ?? username;
-
-            int port = 587;
-            bool.TryParse(useStart, out var enableSsl);
-            int.TryParse(portStr, out port);
+            var host     = _cfg["Smtp:Host"] ?? "smtp.gmail.com";
+            var port     = int.TryParse(_cfg["Smtp:Port"], out var p) ? p : 587;
+            var startTls = bool.TryParse(_cfg["Smtp:UseStartTls"], out var s) ? s : true;
+            var username = _cfg["Smtp:Username"];
+            var password = _cfg["Smtp:Password"];
+            var fromAddr = _cfg["Smtp:FromEmail"] ?? username!;
+            var toAddr   = _cfg["Smtp:ToEmail"]   ?? username!;
 
             using var client = new SmtpClient(host, port)
             {
-                EnableSsl = enableSsl, // روی 587 یعنی STARTTLS
-                Credentials = new NetworkCredential(username, password),
-                Timeout = 20000
+                EnableSsl  = startTls, // برای 587 یعنی STARTTLS
+                Credentials = string.IsNullOrWhiteSpace(username) ? null : new NetworkCredential(username, password),
+                Timeout    = 20000
             };
 
             using var mail = new MailMessage();
-            mail.From = new MailAddress(fromAddr!);
-            mail.To.Add(new MailAddress(toAddr!));
+            mail.From = new MailAddress(fromAddr, fromName ?? fromAddr);
+            mail.To.Add(new MailAddress(toAddr));
             if (!string.IsNullOrWhiteSpace(fromEmail))
-                mail.ReplyToList.Add(new MailAddress(fromEmail));
+                mail.ReplyToList.Add(new MailAddress(fromEmail!, fromName ?? fromEmail));
 
-            mail.Subject = $"Contact form - {name}";
-            mail.Body =
-$@"Name: {name}
-Email: {fromEmail}
-
-{message}";
+            mail.Subject = subject;
+            mail.Body    = body;
 
             try
             {
@@ -57,7 +50,7 @@ Email: {fromEmail}
             catch (Exception ex)
             {
                 _logger.LogError(ex, "SMTP send failed");
-                throw; // کنترلر به‌نرمی هندل می‌کند (دیگه 502 نمی‌بینی)
+                throw;
             }
         }
     }

@@ -20,7 +20,7 @@ namespace XIROX.Controllers
         public IActionResult Contact()
         {
             ViewBag.Success = TempData["Success"] as string;
-            ViewBag.Error = TempData["Error"] as string;
+            ViewBag.Error   = TempData["Error"] as string;
             return View(new ContactViewModel());
         }
 
@@ -31,9 +31,23 @@ namespace XIROX.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            var subject = $"Contact form - {model.Name}";
+            var body =
+$@"Name: {model.Name}
+Email: {model.Email}
+
+{model.Message}";
+
             try
             {
-                await _email.SendContactAsync(model.Name!, model.Email!, model.Message!);
+                await _email.SendAsync(
+                    subject,
+                    body,
+                    model.Name,
+                    model.Email,
+                    HttpContext?.RequestAborted ?? CancellationToken.None
+                );
+
                 TempData["Success"] = "پیام شما با موفقیت ارسال شد.";
                 return RedirectToAction(nameof(Contact));
             }
