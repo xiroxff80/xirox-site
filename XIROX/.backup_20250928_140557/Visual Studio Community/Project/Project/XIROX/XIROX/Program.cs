@@ -15,14 +15,24 @@ if (!app.Environment.IsDevelopment())
     // app.UseHsts();
 }
 
-var fwd = new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto };
-fwd.KnownNetworks.Clear(); fwd.KnownProxies.Clear(); app.UseForwardedHeaders(fwd);
+var fwd = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+};
+fwd.KnownNetworks.Clear();
+fwd.KnownProxies.Clear();
+app.UseForwardedHeaders(fwd);
 
 // app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.MapControllerRoute(name:"default", pattern:"{controller=Home}/{action=Index}/{id?}");
-app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllers(); // /api/metrics/*
+
 app.MapGet("/healthz", () => Results.Ok("OK"));
+
 app.Run();

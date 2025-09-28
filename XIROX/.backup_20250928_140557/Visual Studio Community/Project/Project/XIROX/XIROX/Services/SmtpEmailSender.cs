@@ -30,10 +30,9 @@ namespace XIROX.Services
             using var client = new SmtpClient(host, port)
             {
                 EnableSsl      = startTls,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Credentials    = string.IsNullOrWhiteSpace(username) ? null : new NetworkCredential(username, password),
                 Timeout        = timeoutMs,
-                UseDefaultCredentials = false,
-                Credentials    = string.IsNullOrWhiteSpace(username) ? null : new NetworkCredential(username, password)
+                DeliveryMethod = SmtpDeliveryMethod.Network
             };
 
             using var mail = new MailMessage();
@@ -46,8 +45,11 @@ namespace XIROX.Services
             mail.Body    = body;
 
             try { await client.SendMailAsync(mail, ct); }
-            catch (SmtpException ex) { _logger.LogError(ex, "SMTP send failed (Port={Port})", port); throw; }
-            catch (Exception ex)     { _logger.LogError(ex, "SMTP send failed"); throw; }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SMTP send failed");
+                throw;
+            }
         }
     }
 }
