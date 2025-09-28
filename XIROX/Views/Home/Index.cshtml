@@ -13,6 +13,7 @@
 </div>
 
 <main class="container main-content" id="main-content-xirox" style="opacity:0;">
+
     <!-- HERO -->
     <section class="profile-section-xirox" aria-label="Profile">
         <div class="avatar-ring">
@@ -36,24 +37,36 @@
         <a href="@Model.TelegramUrl" target="_blank" rel="noopener" class="social-link tilt" aria-label="Telegram" data-tilt>
             <img src="~/images/social/icons8-telegram-94.png" class="social-img" alt="Telegram" />
         </a>
+
         <a href="@Model.WhatsAppUrl" target="_blank" rel="noopener" class="social-link tilt" aria-label="WhatsApp" data-tilt>
             <img src="~/images/social/icons8-whatsapp-94.png" class="social-img" alt="WhatsApp" />
         </a>
+
         <a href="@Model.TikTokUrl" target="_blank" rel="noopener" class="social-link tilt" aria-label="TikTok" data-tilt>
             <img src="~/images/social/icons8-tiktok-94.png" class="social-img" alt="TikTok" />
         </a>
+
         <a href="@Model.InstagramUrl" target="_blank" rel="noopener" class="social-link tilt" aria-label="Instagram" data-tilt>
             <img src="~/images/social/icons8-instagram-94.png" class="social-img" alt="Instagram" />
         </a>
+
         <a href="@Model.YouTubeUrl" target="_blank" rel="noopener" class="social-link tilt" aria-label="YouTube" data-tilt>
             <img src="~/images/social/icons8-youtube-94.png" class="social-img" alt="YouTube" />
         </a>
+
+        <!-- === NEW: Discord (همان کلاس‌ها و استایل بقیه) === -->
+        <a href="https://discord.gg/xiroxff" target="_blank" rel="noopener"
+           class="social-link tilt" aria-label="Discord" title="Zyrox FF (Discord)" data-tilt>
+            <img src="~/images/social/icons8-discord-94.png" class="social-img" alt="Discord" />
+        </a>
+        <!-- === /Discord === -->
     </section>
 
     <hr class="xirox-divider" />
 
     <!-- STATS STRIP -->
     <section class="stats-strip separated reveal" aria-label="Stats">
+
         <!-- Total Visits -->
         <div class="stat compact" id="stat-card-visits">
             <div class="stat-head">
@@ -75,7 +88,6 @@
                 </svg>
                 <span class="stat-title">Satisfied Users</span>
             </div>
-
             <div class="stat-body satisfy-grid">
                 <!-- Left (dislike) -->
                 <div class="col-left">
@@ -136,6 +148,7 @@
                 <div><span class="age-num" id="age-secs">0</span><span class="age-unit">secs</span></div>
             </div>
         </div>
+
     </section>
 </main>
 
@@ -160,215 +173,204 @@
     <!-- Red Rain (intro) -->
     <script>
         (function(){
-            const canvas=document.getElementById('rain-canvas'); if(!canvas) return;
-            const ctx=canvas.getContext('2d');
-            let dpr=Math.max(1,Math.min(2,window.devicePixelRatio||1));
-            let w=0,h=0,running=true,drops=[];
-            function resize(){ w=innerWidth; h=innerHeight;
-                canvas.width=Math.floor(w*dpr); canvas.height=Math.floor(h*dpr);
-                canvas.style.width=w+'px'; canvas.style.height=h+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); }
-            function make(){ drops=[]; const c=Math.floor((Math.max(w,h)/15));
-                for(let i=0;i<c;i++) drops.push({x:Math.random()*w,y:Math.random()*h,l:Math.random()*18+16,xs:Math.random()*0.9-0.45,ys:Math.random()*8+6});}
-            function draw(){ if(!running) return; ctx.clearRect(0,0,w,h); ctx.globalAlpha=.48; ctx.strokeStyle='#ff2323'; ctx.lineWidth=2.2;
-                for(const r of drops){ ctx.beginPath(); ctx.moveTo(r.x,r.y); ctx.lineTo(r.x+r.xs,r.y+r.l); ctx.stroke();
-                    r.x+=r.xs; r.y+=r.ys; if(r.y>h||r.x>w||r.x<0){ r.x=Math.random()*w; r.y=-18; } }
-                requestAnimationFrame(draw); }
-            addEventListener('resize', ()=>{ resize(); make(); });
-            resize(); make(); requestAnimationFrame(draw);
-            document.addEventListener('xirox:introDone', ()=> running=false);
+          const canvas=document.getElementById('rain-canvas'); if(!canvas) return;
+          const ctx=canvas.getContext('2d');
+          let dpr=Math.max(1,Math.min(2,window.devicePixelRatio||1));
+          let w=0,h=0,running=true,drops=[];
+          function resize(){ w=innerWidth; h=innerHeight; canvas.width=Math.floor(w*dpr); canvas.height=Math.floor(h*dpr); canvas.style.width=w+'px'; canvas.style.height=h+'px'; ctx.setTransform(dpr,0,0,dpr,0,0); }
+          function make(){ drops=[]; const c=Math.floor((Math.max(w,h)/15)); for(let i=0;i<c;i++) drops.push({x:Math.random()*w,y:Math.random()*h,l:Math.random()*18+16,xs:Math.random()*0.9-0.45,ys:Math.random()*8+6});}
+          function draw(){ if(!running) return; ctx.clearRect(0,0,w,h); ctx.globalAlpha=.48; ctx.strokeStyle='#ff2323'; ctx.lineWidth=2.2; for(const r of drops){ ctx.beginPath(); ctx.moveTo(r.x,r.y); ctx.lineTo(r.x+r.xs,r.y+r.l); ctx.stroke(); r.x+=r.xs; r.y+=r.ys; if(r.y>h||r.x>w||r.x<0){ r.x=Math.random()*w; r.y=-18; } } requestAnimationFrame(draw); }
+          addEventListener('resize', ()=>{ resize(); make(); });
+          resize(); make(); requestAnimationFrame(draw);
+          document.addEventListener('xirox:introDone', ()=> running=false);
         })();
     </script>
 
     <!-- Intro glue -->
     <script>
         (function(){
-            const root=document.body, overlay=document.getElementById('intro-overlay'),
-                  introText=document.querySelector('#intro-xirox span'),
-                  target=document.getElementById('target-xirox-title');
-            if(!introText||!target||!overlay){ root.classList.add('intro-done'); return; }
-            introText.style.opacity=0; introText.style.transform='translateY(-100px) scale(1.5) rotate(-15deg)';
-            setTimeout(()=>{ introText.style.transition='all 1.2s cubic-bezier(.42,1.7,.3,.97)';
-                introText.style.opacity=1; introText.style.transform='translateY(0) scale(1) rotate(0deg)'; },300);
-            setTimeout(()=>{ const t=target.getBoundingClientRect(), i=introText.getBoundingClientRect();
-                const dx=(t.left+t.width/2)-(i.left+i.width/2), dy=(t.top+t.height/2)-(i.top+i.height/2);
-                introText.style.transition='transform 1.25s cubic-bezier(.7,1.6,.25,1), opacity 1.2s';
-                introText.style.transform=`translate(${dx}px, ${dy}px) scale(.8) rotate(360deg)`; introText.style.opacity='.5';
-                setTimeout(()=>{ root.classList.add('intro-done'); overlay.setAttribute('aria-hidden','true');
-                    document.dispatchEvent(new CustomEvent('xirox:introDone')); setTimeout(()=>overlay.remove(),900); },1200);
-            },1900);
+          const root=document.body, overlay=document.getElementById('intro-overlay'), introText=document.querySelector('#intro-xirox span'), target=document.getElementById('target-xirox-title');
+          if(!introText||!target||!overlay){ root.classList.add('intro-done'); return; }
+          introText.style.opacity=0; introText.style.transform='translateY(-100px) scale(1.5) rotate(-15deg)';
+          setTimeout(()=>{ introText.style.transition='all 1.2s cubic-bezier(.42,1.7,.3,.97)'; introText.style.opacity=1; introText.style.transform='translateY(0) scale(1) rotate(0deg)'; },300);
+          setTimeout(()=>{
+            const t=target.getBoundingClientRect(), i=introText.getBoundingClientRect();
+            const dx=(t.left+t.width/2)-(i.left+i.width/2), dy=(t.top+t.height/2)-(i.top+i.height/2);
+            introText.style.transition='transform 1.25s cubic-bezier(.7,1.6,.25,1), opacity 1.2s';
+            introText.style.transform = `translate(${dx}px, ${dy}px) scale(.8) rotate(360deg)`;
+            introText.style.opacity='.5';
+            setTimeout(()=>{ root.classList.add('intro-done'); overlay.setAttribute('aria-hidden','true'); document.dispatchEvent(new CustomEvent('xirox:introDone')); setTimeout(()=>overlay.remove(),900); },1200);
+          },1900);
         })();
     </script>
 
     <!-- Typed hero line -->
     <script>
         (function(){
-            const el=document.getElementById('typed-line'); if(!el) return;
-            const lines=["Digital Creator.","Gamer.","Let’s build awesome things."]; let li=0,i=0,dir=1;
-            function tick(){ const s=lines[li]; el.textContent=s.slice(0,i); i+=dir;
-                if(i>s.length+8) dir=-1; if(i<=0){ dir=1; li=(li+1)%lines.length; }
-                setTimeout(tick, dir>0?42:24); }
-            tick();
+          const el=document.getElementById('typed-line'); if(!el) return;
+          const lines=["Digital Creator.","Gamer.","Let’s build awesome things."];
+          let li=0,i=0,dir=1;
+          function tick(){
+            const s=lines[li]; el.textContent=s.slice(0,i); i+=dir;
+            if(i>s.length+8) dir=-1;
+            if(i<=0){ dir=1; li=(li+1)%lines.length; }
+            setTimeout(tick, dir>0?42:24);
+          }
+          tick();
         })();
     </script>
 
     <!-- Tilt / Ripple / Metrics + Voting + Uptime / Palette / Title typing -->
     <script>
         (function(){
-            // Tilt
-            document.querySelectorAll('[data-tilt]').forEach(card=>{
-                const strength=12,damp=14; let rx=0,ry=0,tx=0,ty=0,af;
-                function anim(){ rx+=(tx-rx)/damp; ry+=(ty-ry)/damp; card.style.transform=`perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`; af=requestAnimationFrame(anim); }
-                function enter(){ cancelAnimationFrame(af); af=requestAnimationFrame(anim); }
-                function leave(){ tx=ty=0; setTimeout(()=>cancelAnimationFrame(af),240); }
-                function move(e){ const r=card.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
-                    const dx=(e.clientX-cx)/(r.width/2), dy=(e.clientY-cy)/(r.height/2); ty=(-dx)*strength; tx=(dy)*strength; }
-                card.addEventListener('mouseenter', enter); card.addEventListener('mousemove', move); card.addEventListener('mouseleave', leave);
-            });
+          // Tilt
+          document.querySelectorAll('[data-tilt]').forEach(card=>{
+            const strength=12,damp=14; let rx=0,ry=0,tx=0,ty=0,af;
+            function anim(){ rx+=(tx-rx)/damp; ry+=(ty-ry)/damp; card.style.transform=`perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`; af=requestAnimationFrame(anim); }
+            function enter(){ cancelAnimationFrame(af); af=requestAnimationFrame(anim); }
+            function leave(){ tx=ty=0; setTimeout(()=>cancelAnimationFrame(af),240); }
+            function move(e){ const r=card.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2; const dx=(e.clientX-cx)/(r.width/2), dy=(e.clientY-cy)/(r.height/2); ty=(-dx)*strength; tx=(dy)*strength; }
+            card.addEventListener('mouseenter', enter);
+            card.addEventListener('mousemove', move);
+            card.addEventListener('mouseleave', leave);
+          });
 
-            // Ripple
-            addEventListener('click', function(e){
-                const t=e.target.closest('.btn, .social-link, .vote-btn'); if(!t) return;
-                const r=document.createElement('span'); r.className='ripple';
-                const rect=t.getBoundingClientRect(), size=Math.max(rect.width, rect.height);
-                r.style.width=r.style.height=size+'px'; r.style.left=(e.clientX-rect.left-size/2)+'px'; r.style.top=(e.clientY-rect.top-size/2)+'px';
-                t.appendChild(r); setTimeout(()=>r.remove(),600);
-            }, {passive:true});
+          // Ripple
+          addEventListener('click', function(e){
+            const t=e.target.closest('.btn, .social-link, .vote-btn'); if(!t) return;
+            const r=document.createElement('span'); r.className='ripple';
+            const rect=t.getBoundingClientRect(), size=Math.max(rect.width, rect.height);
+            r.style.width=r.style.height=size+'px'; r.style.left=(e.clientX-rect.left-size/2)+'px'; r.style.top=(e.clientY-rect.top-size/2)+'px';
+            t.appendChild(r); setTimeout(()=>r.remove(),600);
+          }, {passive:true});
 
-            // ===== Metrics / Voting / Uptime =====
-            const $=(s,c=document)=>c.querySelector(s);
-            const rollTo=(el,val,prefix='')=>{
-                const newText=(prefix?prefix:'')+val.toLocaleString();
-                const old=el.textContent.trim();
-                if(old===newText){ el.textContent=newText; return; }
-                const wrap=document.createElement('span'); wrap.className='roller-wrap';
-                const a=document.createElement('span'); a.className='roller curr'; a.textContent=old|| (prefix+'0');
-                const b=document.createElement('span'); b.className='roller next'; b.textContent=newText;
-                wrap.appendChild(a); wrap.appendChild(b); el.innerHTML=''; el.appendChild(wrap);
-                requestAnimationFrame(()=>wrap.classList.add('roll'));
-                wrap.addEventListener('animationend', ()=>{ el.textContent=newText; }, {once:true});
-            };
-            const burst=(el,text,kind)=>{
-                const s=document.createElement('span'); s.className='burst '+(kind||'up'); s.textContent=text;
-                const r=el.getBoundingClientRect(); s.style.left=(r.left+r.width/2)+'px'; s.style.top=(r.top+r.height/2)+'px';
-                document.body.appendChild(s); setTimeout(()=>s.remove(),700);
-            };
+          // ===== Metrics / Voting / Uptime =====
+          const $=(s,c=document)=>c.querySelector(s);
+          const rollTo=(el,val,prefix='')=>{
+            const newText=(prefix?prefix:'')+val.toLocaleString();
+            const old=el.textContent.trim();
+            if(old===newText){ el.textContent=newText; return; }
+            const wrap=document.createElement('span'); wrap.className='roller-wrap';
+            const a=document.createElement('span'); a.className='roller curr'; a.textContent=old||(prefix+'0');
+            const b=document.createElement('span'); b.className='roller next'; b.textContent=newText;
+            wrap.appendChild(a); wrap.appendChild(b); el.innerHTML=''; el.appendChild(wrap);
+            requestAnimationFrame(()=>wrap.classList.add('roll'));
+            wrap.addEventListener('animationend', ()=>{ el.textContent=newText; }, {once:true});
+          };
+          const burst=(el,text,kind)=>{
+            const s=document.createElement('span'); s.className='burst '+(kind||'up'); s.textContent=text;
+            const r=el.getBoundingClientRect(); s.style.left=(r.left+r.width/2)+'px'; s.style.top=(r.top+r.height/2)+'px';
+            document.body.appendChild(s); setTimeout(()=>s.remove(),700);
+          };
 
-            const rollVisits=$('#visits-roller'),
-                  rollUp=$('#up-roller'), rollDown=$('#down-roller');
-            const btnLike=$('#btn-like'), btnDislike=$('#btn-dislike');
-            const face=$('#face-emoji');
+          const rollVisits=$('#visits-roller'), rollUp=$('#up-roller'), rollDown=$('#down-roller');
+          const btnLike=$('#btn-like'), btnDislike=$('#btn-dislike');
+          const face=$('#face-emoji');
+          const ageY=$('#age-years'), ageM=$('#age-months'), ageD=$('#age-days'), ageH=$('#age-hours'), ageMin=$('#age-mins'), ageS=$('#age-secs');
 
-            const ageY=$('#age-years'), ageM=$('#age-months'), ageD=$('#age-days'),
-                  ageH=$('#age-hours'), ageMin=$('#age-mins'), ageS=$('#age-secs');
+          const API={
+            visit: ()=>fetch('/api/metrics/visit',{method:'POST'}).then(r=>r.json()),
+            state: ()=>fetch('/api/metrics/state',{cache:'no-store'}).then(r=>r.json()),
+            voteSet:(prev,next)=>fetch(`/api/metrics/vote?prev=${prev}&next=${next}`,{method:'POST'}).then(r=>r.json())
+          };
 
-            const API={
-                visit: ()=>fetch('/api/metrics/visit',{method:'POST'}).then(r=>r.json()),
-                state: ()=>fetch('/api/metrics/state',{cache:'no-store'}).then(r=>r.json()),
-                voteSet:(prev,next)=>fetch(`/api/metrics/vote?prev=${prev}&next=${next}`,{method:'POST'}).then(r=>r.json())
-            };
+          function diffYMDHMS(from,to){
+            let y=to.getFullYear()-from.getFullYear(); let base=new Date(from); base.setFullYear(from.getFullYear()+y); if(base>to){ y--; base.setFullYear(base.getFullYear()-1); }
+            let m=(to.getFullYear()-base.getFullYear())*12+(to.getMonth()-base.getMonth()); base.setMonth(base.getMonth()+m); if(base>to){ m--; base.setMonth(base.getMonth()-1); }
+            let ms=to-base; const d=Math.floor(ms/86400000); ms-=d*86400000; const h=Math.floor(ms/3600000); ms-=h*3600000; const min=Math.floor(ms/60000); ms-=min*60000; const s=Math.floor(ms/1000);
+            return {y,m,d,h,min,s};
+          }
 
-            function diffYMDHMS(from,to){
-                let y=to.getFullYear()-from.getFullYear();
-                let base=new Date(from); base.setFullYear(from.getFullYear()+y);
-                if(base>to){ y--; base.setFullYear(base.getFullYear()-1); }
-                let m=(to.getFullYear()-base.getFullYear())*12+(to.getMonth()-base.getMonth());
-                base.setMonth(base.getMonth()+m);
-                if(base>to){ m--; base.setMonth(base.getMonth()-1); }
-                let ms=to-base;
-                const d=Math.floor(ms/86400000); ms-=d*86400000;
-                const h=Math.floor(ms/3600000); ms-=h*3600000;
-                const min=Math.floor(ms/60000); ms-=min*60000;
-                const s=Math.floor(ms/1000);
-                return {y,m,d,h,min,s};
+          let launchedAt=null;
+          function setFaceState(happy){ if(happy){ face.classList.remove('sad'); } else { face.classList.add('sad'); } }
+          function pulseFace(){ face.classList.add('pulse'); setTimeout(()=>face.classList.remove('pulse'), 500); }
+          function paintAll(s){
+            const visits=s.totalVisits ?? s.TotalVisits ?? 0;
+            const up =s.positiveFeedback ?? s.PositiveFeedback ?? 0;
+            const down =s.negativeFeedback ?? s.NegativeFeedback ?? 0;
+            launchedAt =new Date(s.launchedAt ?? s.LaunchedAt ?? new Date());
+            rollTo(rollVisits, visits); rollTo(rollUp, up, '+'); rollTo(rollDown, -down);
+            setFaceState(up > down);
+            const now=new Date(); const {y,m,d,h,min,s:sec}=diffYMDHMS(launchedAt, now);
+            ageY.textContent=y; ageM.textContent=m; ageD.textContent=d; ageH.textContent=h; ageMin.textContent=min; ageS.textContent=sec;
+          }
+
+          // live uptime
+          setInterval(()=>{ if(!launchedAt) return; const now=new Date(); const {y,m,d,h,min,s}=diffYMDHMS(launchedAt, now);
+            ageY.textContent=y; ageM.textContent=m; ageD.textContent=d; ageH.textContent=h; ageMin.textContent=min; ageS.textContent=s;
+          },1000);
+
+          // first paint + poll
+          API.visit().then(paintAll).catch(()=>{});
+          setInterval(()=>{ API.state().then(paintAll).catch(()=>{}); },15000);
+
+          // device-limited voting
+          const KEY='xirox:vote:v1';
+          const read=()=>localStorage.getItem(KEY)||'none';
+          const save=v=>localStorage.setItem(KEY,v);
+          const apply=()=>{ const v=read(); btnLike.classList.toggle('active', v==='up'); btnDislike.classList.toggle('active', v==='down'); };
+          apply();
+
+          function nextState(clicked){
+            const prev=read(); if(prev===clicked) return {prev, next:'none'}; // toggle off
+            return {prev, next:clicked};
+          }
+
+          btnLike?.addEventListener('click', ()=>{
+            const {prev,next}=nextState('up');
+            btnLike.disabled=btnDislike.disabled=true;
+            API.voteSet(prev,next).then(s=>{ paintAll(s); save(next); apply(); setFaceState(true); pulseFace(); burst(btnLike,'+1','up'); })
+              .finally(()=>{ btnLike.disabled=btnDislike.disabled=false; });
+          });
+
+          btnDislike?.addEventListener('click', ()=>{
+            const {prev,next}=nextState('down');
+            btnLike.disabled=btnDislike.disabled=true;
+            API.voteSet(prev,next).then(s=>{ paintAll(s); save(next); apply(); setFaceState(false); pulseFace(); burst(btnDislike,'-1','down'); })
+              .finally(()=>{ btnLike.disabled=btnDislike.disabled=false; });
+          });
+
+          // Command palette + title typing
+          const root=document.getElementById('cmdk'), input=document.getElementById('cmdk-input'), list=document.getElementById('cmdk-list');
+          function open(){ root.setAttribute('aria-hidden','false'); input.value=''; input.focus(); filter(''); }
+          function close(){ root.setAttribute('aria-hidden','true'); input.blur(); }
+          function filter(q){
+            const t=q.toLowerCase();
+            [...list.children].forEach(li=>li.style.display=li.textContent.toLowerCase().includes(t)?'block':'none');
+            const first=[...list.querySelectorAll('li')].find(li=>li.style.display!=='none');
+            [...list.children].forEach(li=>li.classList.remove('cmdk-active'));
+            if(first) first.classList.add('cmdk-active');
+          }
+          addEventListener('keydown',(e)=>{
+            if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){ e.preventDefault(); open(); }
+            if(e.key==='Escape'&&root.getAttribute('aria-hidden')==='false') close();
+            if(root.getAttribute('aria-hidden')==='false'){
+              const a=list.querySelector('.cmdk-active');
+              if(e.key==='ArrowDown'){
+                e.preventDefault();
+                let n=a?.nextElementSibling; while(n&&n.style.display==='none') n=n.nextElementSibling;
+                if(n){a?.classList.remove('cmdk-active'); n.classList.add('cmdk-active');}
+              }
+              if(e.key==='ArrowUp'){
+                e.preventDefault();
+                let p=a?.previousElementSibling; while(p&&p.style.display==='none') p=p.previousElementSibling;
+                if(p){a?.classList.remove('cmdk-active'); p.classList.add('cmdk-active');}
+              }
+              if(e.key==='Enter'){ e.preventDefault(); a?.click(); }
             }
+          });
+          input?.addEventListener('input', e=>filter(e.target.value));
+          root?.addEventListener('click', e=>{ if(e.target===root) close(); });
 
-            let launchedAt=null;
-
-            function setFaceState(happy){
-                if(happy){ face.classList.remove('sad'); } else { face.classList.add('sad'); }
+          (function(){
+            const fullTitle="Welcome to the X I R O X website";
+            let i=0, d=150, p=1100;
+            function type(){
+              if(i<=fullTitle.length){ document.title=fullTitle.substring(0,i); i++; setTimeout(type,d); }
+              else { setTimeout(()=>{ i=0; type(); }, p); }
             }
-            function pulseFace(){ face.classList.add('pulse'); setTimeout(()=>face.classList.remove('pulse'), 500); }
-
-            function paintAll(s){
-                const visits=s.totalVisits ?? s.TotalVisits ?? 0;
-                const up    =s.positiveFeedback ?? s.PositiveFeedback ?? 0;
-                const down  =s.negativeFeedback ?? s.NegativeFeedback ?? 0;
-                launchedAt  =new Date(s.launchedAt ?? s.LaunchedAt ?? new Date());
-
-                rollTo(rollVisits, visits);
-                rollTo(rollUp,   up, '+');
-                rollTo(rollDown, -down);
-
-                setFaceState(up > down);
-
-                const now=new Date();
-                const {y,m,d,h,min,s:sec}=diffYMDHMS(launchedAt, now);
-                ageY.textContent=y; ageM.textContent=m; ageD.textContent=d;
-                ageH.textContent=h; ageMin.textContent=min; ageS.textContent=sec;
-            }
-
-            // live uptime
-            setInterval(()=>{ if(!launchedAt) return;
-                const now=new Date(); const {y,m,d,h,min,s}=diffYMDHMS(launchedAt, now);
-                ageY.textContent=y; ageM.textContent=m; ageD.textContent=d; ageH.textContent=h; ageMin.textContent=min; ageS.textContent=s;
-            },1000);
-
-            // first paint + poll
-            API.visit().then(paintAll).catch(()=>{});
-            setInterval(()=>{ API.state().then(paintAll).catch(()=>{}); },15000);
-
-            // device-limited voting
-            const KEY='xirox:vote:v1';
-            const read=()=>localStorage.getItem(KEY)||'none';
-            const save=v=>localStorage.setItem(KEY,v);
-            const apply=()=>{
-                const v=read();
-                btnLike.classList.toggle('active', v==='up');
-                btnDislike.classList.toggle('active', v==='down');
-            };
-            apply();
-
-            function nextState(clicked){
-                const prev=read();
-                if(prev===clicked) return {prev, next:'none'}; // toggle off
-                return {prev, next:clicked};
-            }
-
-            btnLike?.addEventListener('click', ()=>{
-                const {prev,next}=nextState('up'); btnLike.disabled=btnDislike.disabled=true;
-                API.voteSet(prev,next).then(s=>{
-                    paintAll(s); save(next); apply(); setFaceState(true); pulseFace(); burst(btnLike,'+1','up');
-                }).finally(()=>{ btnLike.disabled=btnDislike.disabled=false; });
-            });
-
-            btnDislike?.addEventListener('click', ()=>{
-                const {prev,next}=nextState('down'); btnLike.disabled=btnDislike.disabled=true;
-                API.voteSet(prev,next).then(s=>{
-                    paintAll(s); save(next); apply(); setFaceState(false); pulseFace(); burst(btnDislike,'-1','down');
-                }).finally(()=>{ btnLike.disabled=btnDislike.disabled=false; });
-            });
-
-            // Command palette + title typing
-            const root=document.getElementById('cmdk'), input=document.getElementById('cmdk-input'), list=document.getElementById('cmdk-list');
-            function open(){ root.setAttribute('aria-hidden','false'); input.value=''; input.focus(); filter(''); }
-            function close(){ root.setAttribute('aria-hidden','true'); input.blur(); }
-            function filter(q){ const t=q.toLowerCase();
-                [...list.children].forEach(li=>li.style.display=li.textContent.toLowerCase().includes(t)?'block':'none');
-                const first=[...list.querySelectorAll('li')].find(li=>li.style.display!=='none');
-                [...list.children].forEach(li=>li.classList.remove('cmdk-active')); if(first) first.classList.add('cmdk-active'); }
-            addEventListener('keydown',(e)=>{ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){ e.preventDefault(); open(); }
-                if(e.key==='Escape'&&root.getAttribute('aria-hidden')==='false') close();
-                if(root.getAttribute('aria-hidden')==='false'){ const a=list.querySelector('.cmdk-active');
-                    if(e.key==='ArrowDown'){ e.preventDefault(); let n=a?.nextElementSibling; while(n&&n.style.display==='none') n=n.nextElementSibling; if(n){a?.classList.remove('cmdk-active'); n.classList.add('cmdk-active');}}
-                    if(e.key==='ArrowUp'){ e.preventDefault(); let p=a?.previousElementSibling; while(p&&p.style.display==='none') p=p.previousElementSibling; if(p){a?.classList.remove('cmdk-active'); p.classList.add('cmdk-active');}}
-                    if(e.key==='Enter'){ e.preventDefault(); a?.click(); } }});
-            input?.addEventListener('input', e=>filter(e.target.value));
-            root?.addEventListener('click', e=>{ if(e.target===root) close(); });
-
-            (function(){ const fullTitle="Welcome to the X I R O X website"; let i=0, d=150, p=1100;
-                function type(){ if(i<=fullTitle.length){ document.title=fullTitle.substring(0,i); i++; setTimeout(type,d); } else { setTimeout(()=>{ i=0; type(); }, p); } }
-                type();
-            })();
+            type();
+          })();
         })();
     </script>
 }

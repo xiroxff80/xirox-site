@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using XIROX.Models;
 using XIROX.Services;
@@ -10,28 +9,11 @@ namespace XIROX.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IEmailSender _email;
-        private readonly IConfiguration _cfg;
 
-        public HomeController(ILogger<HomeController> logger, IEmailSender email, IConfiguration cfg)
+        public HomeController(ILogger<HomeController> logger, IEmailSender email)
         {
             _logger = logger;
-            _email  = email;
-            _cfg    = cfg;
-        }
-
-        [HttpGet]
-        public IActionResult Index()
-        {
-            var vm = new HomeViewModel
-            {
-                TelegramUrl  = _cfg["Links:Telegram"]  ?? "#",
-                WhatsAppUrl  = _cfg["Links:WhatsApp"]  ?? "#",
-                TikTokUrl    = _cfg["Links:TikTok"]    ?? "#",
-                InstagramUrl = _cfg["Links:Instagram"] ?? "#",
-                YouTubeUrl   = _cfg["Links:YouTube"]   ?? "#",
-                DiscordUrl   = _cfg["Links:Discord"]   ?? "https://discord.gg/xiroxff"
-            };
-            return View(vm);
+            _email = email;
         }
 
         [HttpGet]
@@ -55,10 +37,17 @@ $@"Name: {model.Name}
 Email: {model.Email}
 
 {model.Message}";
+
             try
             {
-                await _email.SendAsync(subject, body, model.Name, model.Email,
-                    HttpContext?.RequestAborted ?? default);
+                await _email.SendAsync(
+                    subject,
+                    body,
+                    model.Name,
+                    model.Email,
+                    HttpContext?.RequestAborted ?? CancellationToken.None
+                );
+
                 TempData["Success"] = "پیام شما با موفقیت ارسال شد.";
                 return RedirectToAction(nameof(Contact));
             }
@@ -70,7 +59,8 @@ Email: {model.Email}
             }
         }
 
-        public IActionResult About()   => View();
+        public IActionResult Index() => View();
+        public IActionResult About() => View();
         public IActionResult Privacy() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
