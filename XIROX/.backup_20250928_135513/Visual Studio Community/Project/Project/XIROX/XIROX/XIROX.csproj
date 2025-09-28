@@ -42,9 +42,4 @@
 	  <Folder Include="App_Data\" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="App_Data\**\*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 </Project>
