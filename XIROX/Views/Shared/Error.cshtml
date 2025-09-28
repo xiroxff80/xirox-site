@@ -1,12 +1,23 @@
-﻿@model XIROX.Models.ErrorViewModel?
+﻿@model XIROX.Models.ErrorViewModel
 @{
-    ViewData["Title"] = "خطا";
+    ViewData["Title"] = "Error";
 }
-<h1>خطا</h1>
 
-@if (!string.IsNullOrEmpty(Model?.RequestId))
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+@if (Model.ShowRequestId)
 {
-  <p>Request ID: <code>@Model!.RequestId</code></p>
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
 }
 
-<p>مشکلی پیش آمد. لطفاً کمی بعد دوباره تلاش کنید.</p>
+<h3>Development Mode</h3>
+<p>
+    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
+</p>
+<p>
+    <strong>The Development environment shouldn't be enabled for deployed applications.</strong> It can result in displaying sensitive information from exceptions to end users.
+    For local debugging, enable the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong> and restart the app.
+</p>
