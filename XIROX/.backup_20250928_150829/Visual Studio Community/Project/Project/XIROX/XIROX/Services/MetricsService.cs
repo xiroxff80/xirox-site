@@ -15,13 +15,8 @@ namespace XIROX.Services
         public MetricsService(IHostEnvironment env, ILogger<MetricsService> logger)
         {
             _logger = logger;
-
-            var envDir = Environment.GetEnvironmentVariable("XIROX_DATA_DIR");
-            var root = string.IsNullOrWhiteSpace(envDir) ? env.ContentRootPath : envDir!;
-            var dir = Path.Combine(root, "App_Data");
-            Directory.CreateDirectory(dir);
-            _filePath = Path.Combine(dir, "metrics.json");
-
+            _filePath = Path.Combine(env.ContentRootPath, "App_Data", "metrics.json");
+            Directory.CreateDirectory(Path.GetDirectoryName(_filePath)!);
             Load();
         }
 

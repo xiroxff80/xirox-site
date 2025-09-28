@@ -22,10 +22,8 @@ namespace XIROX.Services
             var port      = int.TryParse(_cfg["Smtp:Port"], out var p) ? p : 587;
             var startTls  = bool.TryParse(_cfg["Smtp:UseStartTls"], out var s) ? s : true;
             var username  = (_cfg["Smtp:Username"] ?? "").Trim();
-            // Password در تنظیمات می‌تواند با فاصله باشد؛ برای SMTP باید بدون فاصله شود:
             var password  = ((_cfg["Smtp:Password"] ?? "").Replace(" ", "").Trim());
             var fromAddr  = _cfg["Smtp:FromEmail"] ?? username;
-            var cfgFromNm = _cfg["Smtp:FromName"];
             var toAddr    = _cfg["Smtp:ToEmail"]   ?? username;
             var timeoutMs = int.TryParse(_cfg["Smtp:TimeoutMs"], out var t) ? t : 8000;
 
@@ -39,8 +37,7 @@ namespace XIROX.Services
             };
 
             using var mail = new MailMessage();
-            var displayName = string.IsNullOrWhiteSpace(cfgFromNm) ? (string.IsNullOrWhiteSpace(fromName) ? fromAddr : fromName) : cfgFromNm;
-            mail.From = new MailAddress(fromAddr, displayName);
+            mail.From = new MailAddress(fromAddr, string.IsNullOrWhiteSpace(fromName) ? fromAddr : fromName);
             mail.To.Add(new MailAddress(toAddr));
             if (!string.IsNullOrWhiteSpace(fromEmail))
                 mail.ReplyToList.Add(new MailAddress(fromEmail, string.IsNullOrWhiteSpace(fromName) ? fromEmail : fromName));
