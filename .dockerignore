@@ -5,7 +5,7 @@ publish/
 .git
 .gitignore
 .env
-wwwroot/
+
 *.dll
 *.pdb
 *.exe
