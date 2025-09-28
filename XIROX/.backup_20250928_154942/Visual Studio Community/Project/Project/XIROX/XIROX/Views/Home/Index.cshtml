@@ -428,23 +428,4 @@
   }
   loadState(); setInterval(tick,1000);
 })();
-</script><script id="xirox-ticket-boot">
-(function(){
-  const form = document.querySelector("#contactForm, form.contact-form, form#contact-form, form[action*=contact], form[action*=ticket]"); 
-  if(!form) return;
-  const statusEl = document.querySelector("#ticketStatus, .ticket-status");
-  async function send(dto){
-    const res = await fetch("/api/ticket/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(dto)});
-    try{ const j = await res.json(); return res.ok && j && j.ok!==false; }catch{ return res.ok; }
-  }
-  form.addEventListener("submit", async (e)=>{
-    e.preventDefault();
-    const fd = new FormData(form), G=(...k)=>k.map(x=>fd.get(x)).find(v=>v&&String(v).trim().length>0)||"";
-    const payload = { name:G("name","Name","fullname","FullName"), email:G("email","Email","from"), subject:G("subject","Subject"), message:G("message","Message","msg","text") };
-    let ok=false; try{ ok = await send(payload); }catch{}
-    const msgOk="پیام شما با موفقیت ارسال شد.", msgFail="ارسال پیام ناموفق بود. لطفاً دوباره تلاش کنید.";
-    if(statusEl){ statusEl.textContent = ok?msgOk:msgFail; } else { try{ alert(ok?msgOk:msgFail); }catch{} }
-    if(ok) try{ form.reset(); }catch{}
-  });
-})();
 </script>

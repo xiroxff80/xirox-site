@@ -22,7 +22,7 @@ namespace XIROX.Services
             var port      = int.TryParse(_cfg["Smtp:Port"], out var p) ? p : 587;
             var startTls  = bool.TryParse(_cfg["Smtp:UseStartTls"], out var s) ? s : true;
             var username  = (_cfg["Smtp:Username"] ?? "").Trim();
-            // Password may include spaces in config; remove spaces for auth:
+            // Password در تنظیمات می‌تواند با فاصله باشد؛ برای SMTP باید بدون فاصله شود:
             var password  = ((_cfg["Smtp:Password"] ?? "").Replace(" ", "").Trim());
             var fromAddr  = _cfg["Smtp:FromEmail"] ?? username;
             var cfgFromNm = _cfg["Smtp:FromName"];
@@ -31,11 +31,11 @@ namespace XIROX.Services
 
             using var client = new SmtpClient(host, port)
             {
-                EnableSsl             = startTls,
-                DeliveryMethod        = SmtpDeliveryMethod.Network,
-                Timeout               = timeoutMs,
+                EnableSsl      = startTls,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Timeout        = timeoutMs,
                 UseDefaultCredentials = false,
-                Credentials           = string.IsNullOrWhiteSpace(username) ? null : new NetworkCredential(username, password)
+                Credentials    = string.IsNullOrWhiteSpace(username) ? null : new NetworkCredential(username, password)
             };
 
             using var mail = new MailMessage();
