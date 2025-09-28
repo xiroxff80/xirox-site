@@ -1,13 +1,9 @@
-﻿# کم کردن حجم کانتکست داکر
-bin/
+﻿bin/
 obj/
-publish/
 .git
 .gitignore
 .env
-
-*.dll
 *.pdb
-*.exe
-*.deps.json
-*.runtimeconfig.json
+*.user
+*.swp
+*.DS_Store

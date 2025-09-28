@@ -3,25 +3,18 @@ using XIROX.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// MVC
 builder.Services.AddControllersWithViews();
-
-// HTTPS redirect پشت پروکسی (Render)
-builder.Services.AddHttpsRedirection(o => o.HttpsPort = 443);
-
-// سرویس‌های پروژه
-builder.Services.AddSingleton<IStatsStore, FileStatsStore>();
-builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
 
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    // app.UseHsts(); // TLS بیرون کانتینر انجام میشه
 }
 
-// Forwarded headers برای Render
+// Forwarded headers از رندر
 var fwd = new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -30,13 +23,17 @@ fwd.KnownNetworks.Clear();
 fwd.KnownProxies.Clear();
 app.UseForwardedHeaders(fwd);
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+// داخل کانتینر HTTPS ردایرکت نکن؛ Render خودش TLS میده
+// app.UseHttpsRedirection();
 
+app.UseStaticFiles();
 app.UseRouting();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Health check برای پروب و تست
+app.MapGet("/healthz", () => Results.Ok("OK"));
 
 app.Run();

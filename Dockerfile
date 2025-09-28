@@ -10,9 +10,6 @@ RUN dotnet publish "XIROX/XIROX.csproj" -c Release -o /app/out
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/out .
-# Render مقدار PORT را می‌فرستد؛ اپ باید روی همان گوش کند:
-ENV ASPNETCORE_URLS=http://0.0.0.0:${PORT}
-# برای اجرای لوکال اگر PORT نبود، 8080
-ENV PORT=8080
 EXPOSE 8080
-ENTRYPOINT ["dotnet","XIROX.dll"]
+# نکته: اینجا bash متغیر PORT را جایگزین می‌کند (اگر نبود، 8080 برای لوکال)
+CMD ["bash","-lc","dotnet XIROX.dll --urls http://0.0.0.0:${PORT:-8080}"]
