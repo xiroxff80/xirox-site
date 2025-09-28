@@ -5,7 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
-builder.Services.AddSingleton<MetricsService>();
 
 var app = builder.Build();
 
@@ -30,8 +29,6 @@ app.UseRouting();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapControllers(); // enable /api/metrics/*
 
 app.MapGet("/healthz", () => Results.Ok("OK"));
 

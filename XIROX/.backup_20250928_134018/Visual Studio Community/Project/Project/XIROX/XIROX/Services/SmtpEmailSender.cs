@@ -21,18 +21,17 @@ namespace XIROX.Services
             var host      = _cfg["Smtp:Host"] ?? "smtp.gmail.com";
             var port      = int.TryParse(_cfg["Smtp:Port"], out var p) ? p : 587;
             var startTls  = bool.TryParse(_cfg["Smtp:UseStartTls"], out var s) ? s : true;
-            var username  = (_cfg["Smtp:Username"] ?? "").Trim();
-            var password  = ((_cfg["Smtp:Password"] ?? "").Replace(" ", "").Trim());
-            var fromAddr  = _cfg["Smtp:FromEmail"] ?? username;
-            var toAddr    = _cfg["Smtp:ToEmail"]   ?? username;
+            var username  = _cfg["Smtp:Username"];
+            var password  = _cfg["Smtp:Password"];
+            var fromAddr  = _cfg["Smtp:FromEmail"] ?? username ?? "";
+            var toAddr    = _cfg["Smtp:ToEmail"]   ?? username ?? "";
             var timeoutMs = int.TryParse(_cfg["Smtp:TimeoutMs"], out var t) ? t : 8000;
 
             using var client = new SmtpClient(host, port)
             {
-                EnableSsl     = startTls,
-                Credentials   = string.IsNullOrWhiteSpace(username) ? null : new NetworkCredential(username, password),
-                Timeout       = timeoutMs,
-                DeliveryMethod= SmtpDeliveryMethod.Network
+                EnableSsl  = startTls,
+                Credentials = string.IsNullOrWhiteSpace(username) ? null : new NetworkCredential(username, password),
+                Timeout    = timeoutMs
             };
 
             using var mail = new MailMessage();
