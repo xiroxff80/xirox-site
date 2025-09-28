@@ -1,0 +1,22 @@
+﻿# Build outputs
+bin/
+obj/
+publish/
+
+# User/IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Cache/Logs
+*.log
+*.ide
+*.sln.docstates
+
+# Local data
+App_Data/stats.json
+
+# OS junk
+.DS_Store
+Thumbs.db

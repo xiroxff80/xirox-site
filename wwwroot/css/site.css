@@ -1,0 +1,213 @@
+﻿body {
+    background-color: black;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.page-wrapper {
+    border: 5px solid red;
+    margin: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+}
+
+#particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.main-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid red;
+    margin-bottom: 20px;
+    object-fit: cover;
+}
+
+.xirox-name {
+    font-size: 2.5rem;
+    animation: pulse 2s infinite;
+    color: red;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.social-icons {
+    margin: 20px 0;
+}
+
+    .social-icons a {
+        font-size: 28px;
+        margin: 0 10px;
+        transition: transform 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        color: white;
+        text-decoration: none;
+    }
+
+        /* نور مخصوص hover */
+        .btn:hover,
+        .social-icons a:hover {
+            box-shadow: 0 0 15px red;
+        }
+
+.telegram:hover {
+    color: #0088cc;
+    box-shadow: 0 0 15px #0088cc;
+}
+
+.whatsapp:hover {
+    color: #25d366;
+    box-shadow: 0 0 15px #25d366;
+}
+
+.instagram:hover {
+    color: #e1306c;
+    box-shadow: 0 0 15px #e1306c;
+}
+
+.tiktok:hover {
+    color: #ffffff;
+    box-shadow: 0 0 15px #ffffff;
+}
+
+.youtube:hover {
+    color: #ff0000;
+    box-shadow: 0 0 15px #ff0000;
+}
+
+.email:hover {
+    color: #ffa500;
+    box-shadow: 0 0 15px #ffa500;
+}
+
+.btn {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    font-weight: bold;
+    border: none;
+}
+
+    .btn:hover {
+        background-color: #ff1a1a;
+    }
+
+    .btn.small {
+        padding: 6px 14px;
+        font-size: 14px;
+    }
+
+.top-nav {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 99;
+}
+
+.page-title {
+    font-size: 2rem;
+    color: red;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.section {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.form-control {
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* کادر پیش‌فرض قرمز */
+.red-border {
+    border: 2px solid red !important;
+    background-color: black;
+    color: white;
+}
+
+    /* وقتی کادر فعال میشه (focus) فقط همون یکی سفید بشه */
+    .red-border:focus {
+        border: 2px solid white !important;
+        outline: none;
+        box-shadow: 0 0 8px white;
+    }
+
+.alert-success {
+    color: green;
+    margin-bottom: 20px;
+}
+
+.text-danger {
+    color: red;
+}
+
+@media (max-width: 600px) {
+    .profile-image {
+        width: 100px;
+        height: 100px;
+    }
+
+    .xirox-name {
+        font-size: 1.8rem;
+    }
+
+    .social-icons a {
+        font-size: 22px;
+        margin: 0 5px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .top-nav {
+        top: 10px;
+        right: 10px;
+    }
+}

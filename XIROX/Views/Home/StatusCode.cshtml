@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Not Found";
+    Layout = "_Layout";
+    var code = ViewBag.StatusCode as int? ?? 404;
+}
+<main class="container main-content">
+    <h1 class="xirox-glow-title">@code</h1>
+    <p class="reveal">The page you’re looking for isn’t here.</p>
+    <a href="/" class="btn small">Back to Home</a>
+</main>

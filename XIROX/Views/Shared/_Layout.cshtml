@@ -1,0 +1,118 @@
+﻿@* Views/Shared/_Layout.cshtml *@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>@ViewData["Title"] - XIROX</title>
+    <meta name="theme-color" content="#000000" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- SEO -->
+    <link rel="canonical" href="https://xirox.ir/" />
+    <meta name="description" content="XIROX — digital creator & gamer. Follow and connect.">
+    <meta property="og:title" content="XIROX" />
+    <meta property="og:description" content="Follow and connect with XIROX." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://xirox.ir/" />
+    <meta property="og:image" content="https://xirox.ir/images/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/animate.css/animate.min.css" asp-append-version="true" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
+    <!-- Site styles -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- PWA Manifest / Icons -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="icon" href="~/favicon.ico" />
+</head>
+<body>
+    <!-- Particles layer -->
+    <div id="particles-js" aria-hidden="true"></div>
+
+    <!-- Viewport red frame -->
+    <div id="viewport-frame" aria-hidden="true"></div>
+
+    <!-- Page transition curtain (radial from click point) -->
+    <div id="page-curtain" aria-hidden="true"></div>
+
+    <!-- Page content -->
+    <div class="page-wrapper">
+        <partial name="_TopNav" />
+        <div id="content" class="container">
+            @RenderBody()
+        </div>
+    </div>
+
+    <!-- Local JS -->
+    <script src="~/lib/jquery/dist/jquery.min.js" defer asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" defer asp-append-version="true"></script>
+
+    <!-- Particles.js -->
+    <script src="~/lib/particles.js/particles.min.js" defer asp-append-version="true"></script>
+    <script src="~/js/particles-config.js" defer asp-append-version="true"></script>
+    <script src="~/js/particles.fixed.js" defer asp-append-version="true"></script>
+
+    <!-- Site scripts -->
+    <script src="~/js/site.js" defer asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+
+    <!-- Page Transition (radial curtain from click point) -->
+    <script>
+        (function () {
+            const CURTAIN_KEY = 'pt:last';
+            const curtain = document.getElementById('page-curtain');
+
+            // Leave animation on internal link clicks
+            document.addEventListener('click', function (e) {
+                const a = e.target.closest('a[href]');
+                if (!a) return;
+                const url = new URL(a.href, location.href);
+                if (url.origin !== location.origin || a.target === '_blank') return;
+
+                const x = e.clientX, y = e.clientY;
+                sessionStorage.setItem(CURTAIN_KEY, JSON.stringify({ x, y, t: Date.now() }));
+
+                curtain.style.setProperty('--x', x + 'px');
+                curtain.style.setProperty('--y', y + 'px');
+                curtain.classList.add('pt-out');
+
+                e.preventDefault();
+                setTimeout(() => { location.href = a.href; }, 350);
+            }, { capture: true });
+
+            // Enter animation on destination page
+            const saved = sessionStorage.getItem(CURTAIN_KEY);
+            if (saved) {
+                try {
+                    const { x, y, t } = JSON.parse(saved);
+                    if (Date.now() - t < 4000) {
+                        curtain.style.setProperty('--x', x + 'px');
+                        curtain.style.setProperty('--y', y + 'px');
+                        curtain.classList.add('pt-in');
+                        setTimeout(() => { sessionStorage.removeItem(CURTAIN_KEY); }, 800);
+                    } else sessionStorage.removeItem(CURTAIN_KEY);
+                } catch { /* ignore */ }
+            }
+        })();
+    </script>
+
+    <noscript>
+        <style>
+            #particles-js {
+                display: none !important
+            }</style>
+    </noscript>
+</body>
+</html>

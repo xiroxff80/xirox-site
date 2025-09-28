@@ -1,0 +1,106 @@
+﻿@model XIROX.Models.ContactViewModel
+@{
+    ViewData["Title"] = "Contact";
+    Layout = "_Layout";
+}
+
+<main class="container main-content">
+
+    <div class="back-row">
+        <a href="/" class="btn-back">Back to Home</a>
+    </div>
+
+    <section class="contact-hero">
+        <h1 class="page-title">Contact Me</h1>
+    </section>
+
+    <!-- ===== Alerts (TempData) ===== -->
+    @if (TempData["ContactSuccess"] is string ok && !string.IsNullOrWhiteSpace(ok))
+    {
+        <div class="alert alert-success" role="alert" style="max-width:900px;margin:0 auto 16px;">
+            @ok
+        </div>
+    }
+    @if (TempData["ContactError"] is string err && !string.IsNullOrWhiteSpace(err))
+    {
+        <div class="alert alert-danger" role="alert" style="max-width:900px;margin:0 auto 16px;">
+            @err
+        </div>
+    }
+
+    <!-- ===== Contact Card / Form ===== -->
+    <section class="contact-card" aria-label="Contact form">
+        <form id="contact-form"
+              asp-controller="Home"
+              asp-action="Contact"
+              method="post"
+              novalidate
+              class="contact-form">
+
+            @* Anti-Forgery Token (حتماً بماند) *@
+            @Html.AntiForgeryToken()
+
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <label asp-for="Name" class="form-label">Name</label>
+                    <input asp-for="Name"
+                           class="form-control red-border"
+                           placeholder="Enter your name"
+                           minlength="2" maxlength="80" required />
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email"
+                           class="form-control red-border"
+                           placeholder="Enter your email"
+                           type="email" inputmode="email" required />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Message" class="form-label">Message</label>
+                    <textarea asp-for="Message"
+                              class="form-control red-border"
+                              rows="6"
+                              placeholder="Write your message..."
+                              minlength="5" maxlength="4000" required></textarea>
+                    <span asp-validation-for="Message" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="contact-actions">
+                <button id="btn-send" type="submit" class="btn" disabled>
+                    Send Message
+                </button>
+            </div>
+
+            <p class="contact-note">
+                Your message will be sent securely from the server. We won't store it beyond delivery.
+            </p>
+        </form>
+    </section>
+</main>
+
+@section Scripts {
+    <script>
+        // فقط فعال/غیرفعال‌کردن دکمه بر اساس HTML5 validity
+        (function () {
+            const form = document.getElementById('contact-form');
+            const btn = document.getElementById('btn-send');
+
+            function updateState() {
+                btn.disabled = !form.checkValidity();
+            }
+
+            form.addEventListener('input', updateState);
+            form.addEventListener('change', updateState);
+            document.addEventListener('DOMContentLoaded', updateState);
+
+            form.addEventListener('submit', function () {
+                btn.disabled = true; // جلوگیری از دوبار کلیک
+            });
+        })();
+    </script>
+}

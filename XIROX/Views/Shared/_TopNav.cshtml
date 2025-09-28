@@ -1,0 +1,18 @@
+﻿@* Views/Shared/_TopNav.cshtml *@
+@{
+    var action = (ViewContext.RouteData.Values["action"]?.ToString() ?? "").ToLowerInvariant();
+    bool Is(string a) => a == action;
+}
+<nav class="top-nav" aria-label="Top navigation">
+    <a asp-controller="Home" asp-action="About"
+       class="btn small @(Is("about") ? "active" : null)"
+       aria-current="@(Is("about") ? "page" : null)">About</a>
+
+    <a asp-controller="Home" asp-action="Contact"
+       class="btn small @(Is("contact") ? "active" : null)"
+       aria-current="@(Is("contact") ? "page" : null)">Contact</a>
+
+    <a asp-controller="Home" asp-action="Privacy"
+       class="btn small @(Is("privacy") ? "active" : null)"
+       aria-current="@(Is("privacy") ? "page" : null)">Privacy</a>
+</nav>
