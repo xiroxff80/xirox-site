@@ -1,112 +1,63 @@
-﻿// Services/SmtpEmailSender.cs
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using MimeKit;
+﻿using System.Net;
+using System.Net.Mail;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace XIROX.Services
 {
-    /// <summary>
-    /// SMTP options bound from appsettings (section: "Smtp")
-    /// </summary>
-    public sealed class SmtpOptions
+    public class SmtpEmailSender : IEmailSender
     {
-        public string Host { get; set; } = "smtp.gmail.com";
-        public int Port { get; set; } = 587;
-        public bool UseStartTls { get; set; } = true;
+        private readonly IConfiguration _cfg;
+        private readonly ILogger<SmtpEmailSender> _logger;
 
-        public string Username { get; set; } = string.Empty;   // Gmail address
-        public string Password { get; set; } = string.Empty;   // App Password (ENV on server)
-        public string FromName { get; set; } = "XIROX Website";
-        public string FromEmail { get; set; } = string.Empty;    // same as Username usually
-        public string ToEmail { get; set; } = string.Empty;    // where messages arrive
-    }
-
-    /// <summary>
-    /// Sends plain text messages via SMTP (Gmail App Password supported).
-    /// </summary>
-    public sealed class SmtpEmailSender : IEmailSender
-    {
-        private readonly SmtpOptions _opt;
-        private readonly ILogger<SmtpEmailSender> _log;
-
-        public SmtpEmailSender(IOptions<SmtpOptions> opt, ILogger<SmtpEmailSender> log)
+        public SmtpEmailSender(IConfiguration cfg, ILogger<SmtpEmailSender> logger)
         {
-            _opt = opt.Value;
-            _log = log;
+            _cfg = cfg;
+            _logger = logger;
         }
 
-        public async Task SendAsync(
-            string fromName,
-            string fromEmail,
-            string? subject,
-            string? message,
-            CancellationToken ct = default)
+        public async Task SendContactAsync(string name, string fromEmail, string message)
         {
-            // Basic validation
-            if (string.IsNullOrWhiteSpace(_opt.Host)) throw new InvalidOperationException("SMTP Host is empty.");
-            if (string.IsNullOrWhiteSpace(_opt.Username)) throw new InvalidOperationException("SMTP Username is empty.");
-            if (string.IsNullOrWhiteSpace(_opt.Password)) throw new InvalidOperationException("SMTP Password is empty.");
-            if (string.IsNullOrWhiteSpace(_opt.FromEmail)) throw new InvalidOperationException("SMTP FromEmail is empty.");
-            if (string.IsNullOrWhiteSpace(_opt.ToEmail)) throw new InvalidOperationException("SMTP ToEmail is empty.");
+            var host      = _cfg["Smtp:Host"] ?? "smtp.gmail.com";
+            var portStr   = _cfg["Smtp:Port"];
+            var useStart  = _cfg["Smtp:UseStartTls"];
+            var username  = _cfg["Smtp:Username"];
+            var password  = _cfg["Smtp:Password"];
+            var fromAddr  = _cfg["Smtp:FromEmail"] ?? username;
+            var toAddr    = _cfg["Smtp:ToEmail"]   ?? username;
 
-            // Build message
-            var msg = new MimeMessage();
-            msg.From.Add(new MailboxAddress(_opt.FromName ?? "XIROX Website", _opt.FromEmail));
-            msg.To.Add(new MailboxAddress("XIROX", _opt.ToEmail));
+            int port = 587;
+            bool.TryParse(useStart, out var enableSsl);
+            int.TryParse(portStr, out port);
 
-            // Let inbox "Reply" go directly to the visitor
+            using var client = new SmtpClient(host, port)
+            {
+                EnableSsl = enableSsl, // روی 587 یعنی STARTTLS
+                Credentials = new NetworkCredential(username, password),
+                Timeout = 20000
+            };
+
+            using var mail = new MailMessage();
+            mail.From = new MailAddress(fromAddr!);
+            mail.To.Add(new MailAddress(toAddr!));
             if (!string.IsNullOrWhiteSpace(fromEmail))
-                msg.ReplyTo.Add(new MailboxAddress(string.IsNullOrWhiteSpace(fromName) ? fromEmail : fromName, fromEmail));
+                mail.ReplyToList.Add(new MailAddress(fromEmail));
 
-            msg.Subject = !string.IsNullOrWhiteSpace(subject) ? subject.Trim() : $"Contact Form - {fromName}";
+            mail.Subject = $"Contact form - {name}";
+            mail.Body =
+$@"Name: {name}
+Email: {fromEmail}
 
-            msg.Body = new TextPart("plain")
-            {
-                Text =
-$@"From: {fromName} <{fromEmail}>
-Time (UTC): {DateTime.UtcNow:O}
-
-Message:
-{message}"
-            };
-
-            // Send
-            using var client = new SmtpClient
-            {
-                Timeout = 15000,
-                CheckCertificateRevocation = true
-            };
-
-            // With App Password we don't use XOAUTH2
-            client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-            var mode = SecureSocketOptions.Auto;
-            if (_opt.Port == 465) mode = SecureSocketOptions.SslOnConnect;
-            else if (_opt.UseStartTls) mode = SecureSocketOptions.StartTls;
+{message}";
 
             try
             {
-                _log.LogInformation("SMTP connect {Host}:{Port} (Mode={Mode})", _opt.Host, _opt.Port, mode);
-                await client.ConnectAsync(_opt.Host, _opt.Port, mode, ct);
-
-                _log.LogInformation("SMTP authenticate as {User}", _opt.Username);
-                await client.AuthenticateAsync(_opt.Username, _opt.Password, ct);
-
-                _log.LogInformation("SMTP send → {To}", _opt.ToEmail);
-                await client.SendAsync(msg, ct);
-
-                await client.DisconnectAsync(true, ct);
-                _log.LogInformation("SMTP sent successfully.");
+                await client.SendMailAsync(mail);
             }
             catch (Exception ex)
             {
-                _log.LogError(ex, "SMTP send failed: {Message}", ex.Message);
-                throw; // bubble up; controller will map to friendly message in Production
+                _logger.LogError(ex, "SMTP send failed");
+                throw; // کنترلر به‌نرمی هندل می‌کند (دیگه 502 نمی‌بینی)
             }
         }
     }
