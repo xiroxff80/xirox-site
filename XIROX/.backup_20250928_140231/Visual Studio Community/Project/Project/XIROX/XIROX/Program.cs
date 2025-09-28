@@ -31,7 +31,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapControllers(); // /api/metrics/*
+app.MapControllers(); // enable /api/metrics/*
 
 app.MapGet("/healthz", () => Results.Ok("OK"));
 
