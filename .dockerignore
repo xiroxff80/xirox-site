@@ -1,0 +1,13 @@
+﻿# کم کردن حجم کانتکست داکر
+bin/
+obj/
+publish/
+.git
+.gitignore
+.env
+wwwroot/
+*.dll
+*.pdb
+*.exe
+*.deps.json
+*.runtimeconfig.json
